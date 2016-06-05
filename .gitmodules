@@ -1,0 +1,6 @@
+[submodule "modules/querystr"]
+	path = modules/querystr
+	url = https://github.com/flickerapps/querystr.git
+[submodule "modules/libstr"]
+    path = modules/libstr
+    url = https://github.com/flickerapps/libstr.git

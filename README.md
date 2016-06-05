@@ -4,7 +4,7 @@ small http server writen in C.
 
 Run the server:
 ```
-$ git clone https://github.com/flickerapps/http_server_c.git
+$ git clone https://github.com/flickerapps/http_server_c.git --recurse-submodules
 cd http_server_c
 make run
 ```
