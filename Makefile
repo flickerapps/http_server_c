@@ -5,9 +5,10 @@ OBJ = \
 CFLAGS = -lpthread
 OUT = bin
 EXEC = $(OUT)/http_server
+INCLUDES = -I include -I modules
 $(EXEC): $(OBJ)
 	mkdir -p $(OUT)
-	$(CC) $(CFLAGS) $(OBJ) -I include -o  $@
+	$(CC) $(CFLAGS) $(OBJ) $(INCLUDES) -o  $@
 all: $(EXEC)
 run: $(EXEC)
 	./$(EXEC) 80 200
@@ -15,7 +16,7 @@ restart:
 	make clean
 	make run
 src/%.o: src/%.c
-	$(CC) -I include $(CFLAGS) -o $@ -c $<
+	$(CC) $(INCLUDES) $(CFLAGS) -o $@ -c $<
 .PHONY: clean
 clean:
 	rm -r bin

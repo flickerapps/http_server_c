@@ -1,6 +1,6 @@
 #include <sys/socket.h>
 #include <pthread.h>
-
+#include <querystr/modules/Objecth/Object.h>
 #ifndef SERVER_H
 #define SERVER_H
 
@@ -44,6 +44,8 @@ void* handleAsync(void*);
 void* recvAsync(void*);
 void* sendAsync(void*);
 void interrupt(int);
+char* getObjectField(var, const char*); /* Object helper */
+int setObjectItem(var, const char*, char*); /* Same Above */
 
  /* end */
 

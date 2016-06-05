@@ -2,7 +2,8 @@
 /*local deps*/
 
 #include <server.h>
-
+#include <libstr/libstr.h>
+#include <querystr/querystr.h>
 /* end */
 #include <stdio.h>
 #include <stdlib.h>
@@ -96,13 +97,19 @@ void* handleAsync(void* c){
 void* recvAsync(void *c){
     request_t* client;
     client = (request_t*)c;
-
     char buffer[KB];
     int recvbytes = recv(client->fd, buffer, KB -1, 0);
     printf("\nRecivied bytes: %d\n", recvbytes);
-    printf("----------------- Request -----------------\n\n");
-    if(recvbytes > 2) printf("%s\n", buffer);
-    printf("-------------------------------------------\n");
+    int info_len = indexOf('\n', buffer ) - 1;
+    char* info_s = substr(buffer, 0, info_len );
+    char** req_info = strsplit(' ', info_s);
+
+    var Request = querystr( buffer, '\n', ':', QUERY_HARD);
+
+    setObjectItem(Request, "method", req_info[0]);
+    setObjectItem(Request, "url", req_info[1]);
+    setObjectItem(Request, "http", req_info[2]);
+
     pthread_exit(NULL);
 }
 
@@ -121,4 +128,25 @@ void* sendAsync(void* c){
     int sendbytes = send( client->fd, message, strlen(message), 0);
     printf("Sent bytes: %d\n", sendbytes);
     pthread_exit(NULL);
+}
+
+char* getObjectField(var Object, const char* field){
+    if(hasChild(Object, (char*) field)){
+        var item = Object->find(Object,(char*)field);
+        return item->getString(item);
+    }
+    else{
+        return (char*)"Undefined";
+    }
+}
+
+int setObjectItem(var Object, const char* key, char* value){
+    var item = ObjectCreate((char*)key);
+    item->setString(item, value);
+    if(isUndefined(Object)){
+        Object->setChild(Object, item);
+    }
+    else{
+        Object->appendChild(Object, item);
+    }
 }
